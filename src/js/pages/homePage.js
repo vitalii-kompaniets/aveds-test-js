@@ -4,14 +4,14 @@ import icon_emergency from "../../../assets/img/emergency.png";
 import icon_therapy from "../../../assets/img/therapy.png";
 import renderProfile from "./profilePage";
 
-export default function () {
+export default function renderHome() {
   const mainContent = `
     <div class="header">
         <div class="logo">
         <a href="./index.html"> <img src=${icon_logo} alt="logo" /></a>
         </div>
         <div class="header-btn">
-        <button class="header-btn__contacts" type="submit">Контакты</button>
+        <button class="header-btn__contacts btn-contacts" type="button">Контакты</button>
         <button class="header-btn__login btn-login" type="submit">Войти</button>
         </div>
     </div>
@@ -22,8 +22,8 @@ export default function () {
             <h1>Место для получения медицинской помощи</h1>
         </div>
         <div class="content-buttons">
-            <button class="button btn-login" type="submit">Войти</button>
-            <button class="button" type="submit">Контакты</button>
+            <button class="button btn-login" type="button">Войти</button>
+            <button class="button btn-contacts" type="submit">Контакты</button>
         </div>
         <div class="content-services-cards">
             <div class="services-card__item">
@@ -117,13 +117,17 @@ export default function () {
   // Отправка формы
   document.querySelector(".form-auth").addEventListener("submit", (e) => {
     e.preventDefault();
-    const allUsers = getUsersFromLocalStorage();
-    const dataUser = getInput();
-    allUsers.push(dataUser);
-    localStorage.setItem("users", JSON.stringify(allUsers));
-    modalForm.classList.remove("show");
-    clearInput();
-    renderProfile();
+    if (document.querySelector("#form-password").value.length >= 8) {
+      const allUsers = getUsersFromLocalStorage();
+      const dataUser = getInput();
+      allUsers.push(dataUser);
+      localStorage.setItem("users", JSON.stringify(allUsers));
+      modalForm.classList.remove("show");
+      clearInput();
+      renderProfile();
+    } else {
+      alert("Пароль должен содержать минимум 8 символов");
+    }
   });
 
   // Получение данных из инпутов
@@ -139,9 +143,6 @@ export default function () {
     document.querySelector("#form-name").value = "";
     document.querySelector("#form-password").value = "";
   }
-
-  // Валидация поля "Пароль"
-  function inputValidate() {}
 
   // Проверяем есть ли в localStorage пользователи
   function getUsersFromLocalStorage() {
